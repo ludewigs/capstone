@@ -1,0 +1,13 @@
+{
+  "env": { "browser": true, "es2021": true },
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "ecmaFeatures": { "jsx": true }
+  },
+  "extends": ["react-app", "react-app/jest"],
+  "rules": {
+    "react/jsx-no-undef": ["error", { "allowGlobals": false }]
+  },
+  "settings": { "react": { "version": "detect" } }
+}
