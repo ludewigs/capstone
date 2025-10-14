@@ -1,0 +1,29 @@
+@use '../base/variables' as *;
+
+.site-header {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding-block: 1rem;
+
+  .logo {
+    height: 40px;
+  }
+  .nav {
+    list-style: none;
+    display: flex;
+    gap: 1.5rem;
+    margin: 0;
+    padding: 0;
+
+    a {
+      text-decoration: none;
+      color: $color-green;
+      font-weight: 600;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}

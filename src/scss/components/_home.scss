@@ -1,0 +1,8 @@
+@use '../base/variables' as *;
+
+.bg-wrapper {
+  background-color: $color-green;
+  margin-bottom: 2rem;
+  padding: 2rem 0;
+  border-radius: 2px;
+}

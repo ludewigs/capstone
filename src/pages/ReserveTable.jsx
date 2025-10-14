@@ -1,5 +1,11 @@
+import { Box } from '@chakra-ui/react';
+
 function ReserveTable() {
-  return <div>ReserveTable</div>;
+  return (
+    <Box className="container--small">
+      <h1>Reserve Table</h1>
+    </Box>
+  );
 }
 
 export default ReserveTable;

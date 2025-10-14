@@ -1,0 +1,70 @@
+@use './variables' as *;
+
+/* Centering wrapper; adds small side padding on narrow screens */
+.container {
+  width: 100%;
+  max-width: $content;
+  margin-inline: auto;
+
+  &--small {
+    max-width: 880px;
+    margin-inline: auto;
+
+    @media (max-width: $bp-md) {
+      max-width: 100%;
+      padding-inline: 16px;
+    }
+  }
+}
+
+/* Core grid: 12 columns on md+, 6 on small, 1 on tiny */
+.grid {
+  display: grid;
+  gap: $gutter;
+
+  /* mobile-first: 1 col */
+  grid-template-columns: 1fr;
+
+  @media (min-width: $bp-sm) {
+    grid-template-columns: repeat(6, 1fr);
+  }
+  @media (min-width: $bp-md) {
+    grid-template-columns: repeat(12, 1fr);
+  }
+}
+
+/* Span utilities
+   Usage: className="col-12 sm:col-6 md:col-4"
+*/
+@function span($n) {
+  @return min($n, 12);
+}
+
+@mixin make-cols($prefix, $cols) {
+  @for $i from 1 through $cols {
+    .#{$prefix}col-#{$i} {
+      grid-column: span $i;
+    }
+  }
+}
+
+/* base = tiny screens (1-col grid but spans still valid) */
+@include make-cols('', 12);
+
+/* small ≥ $bp-sm (6-col) */
+@media (min-width: $bp-sm) {
+  @include make-cols('sm:', 6);
+}
+
+/* medium ≥ $bp-md (12-col) */
+@media (min-width: $bp-md) {
+  @include make-cols('md:', 12);
+}
+
+/* Helpers */
+.full {
+  grid-column: 1 / -1;
+} /* force full width of current grid */
+.center {
+  margin-inline: auto;
+}

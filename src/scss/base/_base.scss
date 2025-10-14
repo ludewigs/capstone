@@ -1,5 +1,7 @@
 @use './variables' as *;
 
+@import url('https://fonts.googleapis.com/css2?family=Karla:wght@400;700&family=Markazi+Text:wght@400;600;700&display=swap');
+
 *,
 *::before,
 *::after {
@@ -12,29 +14,10 @@ html {
 
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Oxygen, Ubuntu,
-    Cantarell, 'Helvetica Neue', Arial, 'Noto Sans';
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-  background: #fff;
+  font-family: 'Karla', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
   color: $color-black;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  margin: 0 0 0.5em;
-  line-height: 1.2;
-}
-p,
-ul,
-ol {
-  margin: 0 0 1em;
+  background: $color-white;
+  line-height: 1.5;
 }
 
 img,
@@ -44,6 +27,35 @@ canvas {
   display: block;
   max-width: 100%;
   height: auto;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Markazi Text', serif;
+  margin: 0;
+  margin-block-end: 0;
+  line-height: 1.2;
+  font-weight: 600;
+}
+h1 {
+  font-size: clamp(2rem, 1.5rem + 2.5vw, 4rem);
+}
+h2 {
+  font-size: clamp(1.5rem, 1.2rem + 1vw, 2.5rem);
+}
+
+.text {
+  font-size: 1rem;
+}
+
+p,
+ul,
+ol {
+  margin: 0 0 1em;
 }
 
 a:focus-visible,
@@ -70,10 +82,6 @@ pre {
   font-size: 0.95em;
 }
 
-header {
-  margin-block-end: 0.5rem;
-}
-
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -83,4 +91,16 @@ input::-webkit-inner-spin-button {
 input[type='number'] {
   appearance: textfield;
   -moz-appearance: textfield;
+}
+
+.yellow {
+  color: $color-yellow;
+}
+
+.green {
+  color: $color-green;
+}
+
+.white {
+  color: $color-white;
 }
