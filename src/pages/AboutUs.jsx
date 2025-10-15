@@ -1,11 +1,11 @@
-import { Box } from '@chakra-ui/react';
+import { Heading, Box } from '@chakra-ui/react';
 
-function About() {
+function AboutUs() {
   return (
     <Box className="container--small">
-      <Box as="h1" mb={4}>
+      <Heading as="h1" mb={4}>
         About Us
-      </Box>
+      </Heading>
       <p>
         Welcome to <strong>Little Lemon</strong>, a family-style Mediterranean
         restaurant founded by{' '}
@@ -35,4 +35,4 @@ function About() {
   );
 }
 
-export default About;
+export default AboutUs;

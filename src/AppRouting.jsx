@@ -1,4 +1,4 @@
-import About from 'pages/About';
+import About from 'pages/AboutUs';
 import Home from 'pages/Home';
 import Login from 'pages/Login';
 import NotFound from 'pages/NotFound';
@@ -13,7 +13,10 @@ function AppRouting() {
       <Route path="/" element={<Home />} />
       <Route path="/about" element={<About />} />
       <Route path="/menu" element={<OnlineMenu />} />
-      <Route path="/reserve" element={<ReserveTable />} />
+      <Route
+        path="/reserve"
+        element={<ReserveTable onSubmitSuccess={false} />}
+      />
       <Route path="/order" element={<Order />} />
       <Route path="/login" element={<Login />} />
       <Route path="*" element={<NotFound />} />

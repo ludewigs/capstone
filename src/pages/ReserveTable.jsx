@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { Box, VStack, Input, Select, Button, Text } from '@chakra-ui/react';
+import { Box, Heading, VStack, Input, Button, Text } from '@chakra-ui/react';
 
 const schema = yup.object({
   date: yup.string().required('Please choose a date'),
@@ -54,9 +54,9 @@ function ReserveTable({ onSubmitSuccess }) {
   return (
     <>
       <Box className="container--small">
-        <Box as="h1" mb={4}>
+        <Heading as="h1" mb={4}>
           Reserve a Table
-        </Box>
+        </Heading>
 
         <Box
           as="form"

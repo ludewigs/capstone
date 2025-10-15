@@ -1,11 +1,11 @@
-import { Box } from '@chakra-ui/react';
+import { Heading, Box } from '@chakra-ui/react';
 
 function Login() {
   return (
     <Box className="container--small">
-      <Box as="h1" mb={4}>
+      <Heading as="h1" mb={4}>
         Login coming soon
-      </Box>
+      </Heading>
       <p>
         Our login feature is still in the works. Soon, you'll be able to create
         an account, manage your reservations, and save your favorite dishes —
