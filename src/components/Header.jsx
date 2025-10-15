@@ -6,7 +6,6 @@ import {
   CloseButton,
   Drawer,
   Flex,
-  IconButton,
   Image,
   Portal,
   VStack

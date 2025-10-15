@@ -104,3 +104,7 @@ input[type='number'] {
 .white {
   color: $color-white;
 }
+
+input:focus::placeholder {
+  color: transparent;
+}
