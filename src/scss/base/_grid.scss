@@ -1,6 +1,15 @@
 @use './variables' as *;
 
-/* Centering wrapper; adds small side padding on narrow screens */
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main {
+  flex: 1;
+}
+
 .container {
   width: 100%;
   max-width: $content;

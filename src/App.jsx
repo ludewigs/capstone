@@ -5,11 +5,18 @@ import { Box } from '@chakra-ui/react';
 
 function App() {
   return (
-    <Box className="container">
+    <Box
+      className="page-wrapper"
+      display="flex"
+      flexDirection="column"
+      minH="100vh"
+    >
       <Header />
-      <main className="main">
-        <AppRouting />
-      </main>
+      <Box as="main" className="main" flex="1">
+        <Box className="container">
+          <AppRouting />
+        </Box>
+      </Box>
       <Footer />
     </Box>
   );

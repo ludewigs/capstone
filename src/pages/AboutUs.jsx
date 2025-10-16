@@ -3,7 +3,7 @@ import { Heading, Box } from '@chakra-ui/react';
 function AboutUs() {
   return (
     <Box className="container--small">
-      <Heading as="h1" mb={4}>
+      <Heading as="h1" mb={4} textAlign="center">
         About Us
       </Heading>
       <p>

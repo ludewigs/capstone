@@ -5,7 +5,6 @@ import {
   SimpleGrid,
   Image,
   HStack,
-  VStack,
   Card
 } from '@chakra-ui/react';
 import { MOCK_SPECIALS } from './home/Specials';
@@ -15,10 +14,16 @@ export default function MenuPage() {
 
   return (
     <Box className="container--small">
-      <Heading as="h1" mb={4}>
+      <Heading as="h1" mb={4} textAlign="center">
         Our Menu
       </Heading>
-      <Text color="fg.muted" maxW="600px" mb={10}>
+      <Text
+        color="fg.muted"
+        maxW="600px"
+        mb={10}
+        mx={'auto'}
+        textAlign="center"
+      >
         Explore our Mediterranean-inspired dishes — freshly made and bursting
         with flavor. Each recipe reflects our love for simple, honest food.
       </Text>
