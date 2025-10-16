@@ -6,7 +6,7 @@ import OnlineMenu from 'pages/OnlineMenu';
 import Order from 'pages/Order';
 import Booking from 'pages/Booking';
 import { Route, Routes } from 'react-router-dom';
-import Confirmation from 'pages/Confirmation';
+import ConfirmedBooking from 'pages/ConfirmedBooking';
 
 function AppRouting() {
   return (
@@ -17,7 +17,7 @@ function AppRouting() {
       <Route path="/reserve" element={<Booking />} />
       <Route path="/order" element={<Order />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/confirmation" element={<Confirmation />} />
+      <Route path="/confirmation" element={<ConfirmedBooking />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

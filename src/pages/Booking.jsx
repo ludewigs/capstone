@@ -3,35 +3,47 @@ import { Box, Heading } from '@chakra-ui/react';
 import BookingForm from './BookingForm';
 import { useNavigate } from 'react-router-dom';
 
-const BASE_TIMES = [
-  '17:00',
-  '17:30',
-  '18:00',
-  '18:30',
-  '19:00',
-  '19:30',
-  '20:00',
-  '20:30',
-  '21:00',
-  '21:30'
-];
+function fetchData(date) {
+  const d = date instanceof Date ? date : new Date(date);
 
-function updateTimes(state, action) {
+  if (typeof fetchAPI === 'function') {
+    return fetchAPI(d);
+  }
+
+  // Fallback if the script didn’t load
+  return [
+    '17:00',
+    '17:30',
+    '18:00',
+    '18:30',
+    '19:00',
+    '19:30',
+    '20:00',
+    '20:30',
+    '21:00',
+    '21:30'
+  ];
+}
+
+export function updateTimes(state, action) {
   switch (action.type) {
     case 'date_changed': {
-      return BASE_TIMES;
+      // action.payload is a Date or a YYYY-MM-DD string
+      return fetchData(action.payload);
     }
     default:
       return state;
   }
 }
 
-function initializeTimes() {
-  return BASE_TIMES;
+export function initializeTimes() {
+  // “Today's” available times, per the project step
+  return fetchData(new Date());
 }
 
 function Booking() {
   const navigate = useNavigate();
+
   const [availableTimes, dispatch] = useReducer(
     updateTimes,
     undefined,
@@ -40,8 +52,21 @@ function Booking() {
 
   const handleSubmit = useCallback(
     async (data) => {
-      await new Promise((r) => setTimeout(r, 500));
-      navigate('/confirmation', { state: data });
+      try {
+        const ok =
+          typeof submitAPI === 'function' ? await submitAPI(data) : false;
+        if (ok) {
+          const existing = JSON.parse(localStorage.getItem('bookings')) || [];
+          localStorage.setItem('bookings', JSON.stringify([...existing, data]));
+          navigate('/confirmation', { state: data });
+          return;
+        } else {
+          throw new Error('submitAPI unavailable or returned false');
+        }
+      } catch (err) {
+        console.error('Submission failed:', err);
+        alert('Submission failed. Please try again.');
+      }
     },
     [navigate]
   );

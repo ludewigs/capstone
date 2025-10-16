@@ -9,5 +9,9 @@
   "rules": {
     "react/jsx-no-undef": ["error", { "allowGlobals": false }]
   },
-  "settings": { "react": { "version": "detect" } }
+  "settings": { "react": { "version": "detect" } },
+  "globals": {
+    "fetchAPI": "readonly",
+    "submitAPI": "readonly"
+  }
 }

@@ -36,24 +36,36 @@ function BookingForm({ defaultValues, availableTimes, dispatch, onSubmit }) {
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
-    watch
+    watch,
+    resetField
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues
   });
 
   const date = watch('date');
+  const isTimeDisabled = !date;
 
   const today = new Date();
   const maxDate = new Date();
   maxDate.setDate(today.getDate() + 14);
 
   useEffect(() => {
-    dispatch({ type: 'date_changed', date });
-  }, [date, dispatch]);
+    if (date) {
+      dispatch({ type: 'date_changed', payload: new Date(date) });
+      resetField('time');
+    }
+  }, [date, dispatch, resetField]);
 
-  const handleFormSubmit = async (data) => {
-    await onSubmit(data);
+  function toLocalYMD(d) {
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  }
+
+  const handleFormSubmit = (data) => {
+    onSubmit(data);
     reset(defaultValues);
   };
 
@@ -77,8 +89,8 @@ function BookingForm({ defaultValues, availableTimes, dispatch, onSubmit }) {
           <Input
             id="date"
             type="date"
-            min={today.toISOString().split('T')[0]}
-            max={maxDate.toISOString().split('T')[0]}
+            min={toLocalYMD(today)}
+            max={toLocalYMD(maxDate)}
             aria-invalid={!!errors.date}
             aria-describedby={errors.date ? 'date-error' : undefined}
             aria-required="true"
@@ -112,14 +124,18 @@ function BookingForm({ defaultValues, availableTimes, dispatch, onSubmit }) {
             aria-invalid={!!errors.time}
             aria-describedby={errors.time ? 'time-error' : undefined}
             aria-required="true"
+            disabled={isTimeDisabled}
             {...register('time')}
           >
-            <option value="">Select time</option>
-            {availableTimes.map((t) => (
-              <option key={t} value={t}>
-                {t}
-              </option>
-            ))}
+            <option value="">
+              {isTimeDisabled ? 'Select a date first' : 'Select time'}
+            </option>
+            {!isTimeDisabled &&
+              availableTimes.map((t) => (
+                <option key={t} value={t}>
+                  {t}
+                </option>
+              ))}
           </select>
           {typeof errors.time?.message === 'string' && (
             <Text

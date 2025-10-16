@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@chakra-ui/react": "^3.27.1",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@hookform/resolvers": "^5.2.2",
@@ -21,6 +20,8 @@
     "yup": "^1.7.1"
   },
   "devDependencies": {
+    "@chakra-ui/react": "^3.27.1",
+    "@types/jest": "^30.0.0",
     "eslint": "^8.57.1",
     "eslint-config-react-app": "^7.0.1",
     "sass": "^1.93.2"

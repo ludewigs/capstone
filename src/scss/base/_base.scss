@@ -111,3 +111,13 @@ input[type='number'] {
 input:focus::placeholder {
   color: transparent;
 }
+
+::selection {
+  background: #fde047;
+  color: #1f2937;
+}
+
+::-moz-selection {
+  background: #fde047;
+  color: #1f2937;
+}

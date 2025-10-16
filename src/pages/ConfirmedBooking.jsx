@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Box, Heading, Text, Button } from '@chakra-ui/react';
+import { Box, Heading, Text, Button, Table } from '@chakra-ui/react';
 
-function Confirmation() {
+function ConfirmedBooking() {
   const { state } = useLocation();
   const navigate = useNavigate();
   const titleRef = useRef(null);
@@ -48,6 +48,15 @@ function Confirmation() {
 
   const { firstName, lastName, date, time, guests, occasion, email } = state;
 
+  const bookingData = [
+    { label: 'Date', value: date },
+    { label: 'Time', value: time },
+    { label: 'Guests', value: guests },
+    { label: 'Occasion', value: occasion || '—' },
+    { label: 'Name', value: `${firstName} ${lastName}` },
+    { label: 'Email', value: email }
+  ];
+
   return (
     <Box
       as="main"
@@ -66,7 +75,6 @@ function Confirmation() {
         Reservation Confirmed 🎉
       </Heading>
 
-      {/* Live region so SRs announce success text */}
       <Box role="status" aria-live="polite" mb={4}>
         <Text id="confirm-intro">
           Thank you,{' '}
@@ -84,47 +92,34 @@ function Confirmation() {
         </Text>
       </Box>
 
-      <Heading as="h2" fontSize="xl" mb={2}>
+      <Heading as="h2" mb={2}>
         Reservation details
       </Heading>
 
-      {/* Use a definition list for key/value pairs */}
-      <Box as="dl" mb={6}>
-        <Text as="dt" fontWeight="bold">
-          Date
-        </Text>
-        <Text as="dd" mb={2}>
-          {date}
-        </Text>
+      <Table.Root
+        variant="outline"
+        size="md"
+        mt={4}
+        mb={6}
+        maxW="480px"
+        borderRadius="md"
+      >
+        <Table.Body>
+          {bookingData.map((row) => (
+            <Table.Row key={row.label}>
+              <Table.Cell fontWeight="bold">{row.label}</Table.Cell>
+              <Table.Cell>{row.value}</Table.Cell>
+            </Table.Row>
+          ))}
+        </Table.Body>
+      </Table.Root>
 
-        <Text as="dt" fontWeight="bold">
-          Time
-        </Text>
-        <Text as="dd" mb={2}>
-          {time}
-        </Text>
-
-        <Text as="dt" fontWeight="bold">
-          Guests
-        </Text>
-        <Text as="dd" mb={2}>
-          {guests}
-        </Text>
-
-        <Text as="dt" fontWeight="bold">
-          Occasion
-        </Text>
-        <Text as="dd" mb={2}>
-          {occasion || '—'}
-        </Text>
-      </Box>
-
-      <Text mb={6}>
+      <Text>
         If you need to make any changes or cancel your reservation, simply reply
         to your confirmation email or contact us directly.
       </Text>
 
-      <Text mb={6}>
+      <Text>
         We look forward to welcoming you and making your visit a memorable one!
         🍋
       </Text>
@@ -141,4 +136,4 @@ function Confirmation() {
   );
 }
 
-export default Confirmation;
+export default ConfirmedBooking;
