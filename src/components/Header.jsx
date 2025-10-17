@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, Link as RouterLink } from 'react-router-dom';
 import Logo from 'assets/logo.svg';
 import BurgerIcon from 'assets/hamburger.svg';
 import {
@@ -7,6 +7,7 @@ import {
   Drawer,
   Flex,
   Image,
+  Link,
   Portal,
   VStack
 } from '@chakra-ui/react';
@@ -15,21 +16,24 @@ export default function Header() {
   const navigate = useNavigate();
 
   return (
-    <Box className="site-header-wrapper container">
-      <header className="site-header container--small">
+    <Box className="site-header-wrapper container" as="header" role="banner">
+      <Box className="site-header container--small">
         <Flex
           justifyContent="space-between"
           alignItems="center"
           width="100%"
           py={3}
         >
-          <Image
-            src={Logo}
-            alt="Little Lemon Logo"
-            className="logo"
-            cursor="pointer"
-            onClick={() => navigate('/')}
-          />
+          {/* Logo as real Home link */}
+          <Link
+            as={RouterLink}
+            to="/"
+            aria-label="Little Lemon — Home"
+            display="inline-flex"
+            alignItems="center"
+          >
+            <Image src={Logo} alt="Little Lemon" className="logo" />
+          </Link>
 
           {/* Desktop nav */}
           <Box
@@ -37,40 +41,47 @@ export default function Header() {
             aria-label="Primary"
             display={['none', 'none', 'block']}
           >
-            <ul className="nav">
-              <li>
+            <Box as="ul" className="nav" m={0} p={0}>
+              <Box as="li" listStyleType="none">
                 <NavLink to="/" end>
                   Home
                 </NavLink>
-              </li>
-              <li>
+              </Box>
+              <Box as="li" listStyleType="none">
                 <NavLink to="/about">About</NavLink>
-              </li>
-              <li>
+              </Box>
+              <Box as="li" listStyleType="none">
                 <NavLink to="/menu">Menu</NavLink>
-              </li>
-              <li>
+              </Box>
+              <Box as="li" listStyleType="none">
                 <NavLink to="/reserve">Reservations</NavLink>
-              </li>
-              <li>
+              </Box>
+              <Box as="li" listStyleType="none">
                 <NavLink to="/order">Order Online</NavLink>
-              </li>
-              <li>
+              </Box>
+              <Box as="li" listStyleType="none">
                 <NavLink to="/login">Login</NavLink>
-              </li>
-            </ul>
+              </Box>
+            </Box>
           </Box>
 
-          {/* Mobile burger (uses Drawer.Trigger) */}
+          {/* Mobile burger + drawer */}
           <Drawer.Root>
             <Drawer.Trigger asChild>
-              <Image
+              {/* Use a real button for the trigger */}
+              <Box
+                as="button"
+                type="button"
                 aria-label="Open menu"
-                variant="plain"
+                aria-haspopup="menu"
                 display={['inline-flex', 'inline-flex', 'none']}
-                src={BurgerIcon}
-                cursor={'pointer'}
-              />
+                p="0"
+                bg="transparent"
+                border="0"
+                cursor="pointer"
+              >
+                <Image src={BurgerIcon} alt="" role="presentation" />
+              </Box>
             </Drawer.Trigger>
 
             <Portal>
@@ -80,7 +91,7 @@ export default function Header() {
                   <Drawer.Header>
                     <Drawer.Title>Menu</Drawer.Title>
                     <Drawer.CloseTrigger asChild>
-                      <CloseButton />
+                      <CloseButton aria-label="Close menu" />
                     </Drawer.CloseTrigger>
                   </Drawer.Header>
 
@@ -91,14 +102,28 @@ export default function Header() {
                       align="stretch"
                       spacing={3}
                     >
-                      <NavLink to="/" end>
-                        Home
-                      </NavLink>
-                      <NavLink to="/about">About</NavLink>
-                      <NavLink to="/menu">Menu</NavLink>
-                      <NavLink to="/reserve">Reservations</NavLink>
-                      <NavLink to="/order">Order Online</NavLink>
-                      <NavLink to="/login">Login</NavLink>
+                      <Box as="ul" m={0} p={0}>
+                        <Box as="li" listStyleType="none">
+                          <NavLink to="/" end>
+                            Home
+                          </NavLink>
+                        </Box>
+                        <Box as="li" listStyleType="none">
+                          <NavLink to="/about">About</NavLink>
+                        </Box>
+                        <Box as="li" listStyleType="none">
+                          <NavLink to="/menu">Menu</NavLink>
+                        </Box>
+                        <Box as="li" listStyleType="none">
+                          <NavLink to="/reserve">Reservations</NavLink>
+                        </Box>
+                        <Box as="li" listStyleType="none">
+                          <NavLink to="/order">Order Online</NavLink>
+                        </Box>
+                        <Box as="li" listStyleType="none">
+                          <NavLink to="/login">Login</NavLink>
+                        </Box>
+                      </Box>
                     </VStack>
                   </Drawer.Body>
                 </Drawer.Content>
@@ -106,7 +131,7 @@ export default function Header() {
             </Portal>
           </Drawer.Root>
         </Flex>
-      </header>
+      </Box>
     </Box>
   );
 }

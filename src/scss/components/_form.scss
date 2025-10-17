@@ -49,3 +49,25 @@
   background-position: right 12px center;
   background-size: 16px 16px;
 }
+
+.form-select[data-empty='false'] {
+  color: $color-white;
+  background-color: $color-green;
+  font-weight: 600;
+  background-image: url("data:image/svg+xml;utf8,\
+  <svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+}
+
+.form-select[data-empty='true'] {
+  color: $color-green;
+  font-weight: 600;
+}
+
+.label {
+  display: block;
+  margin-bottom: 0.3rem;
+  span {
+    font-weight: 600;
+    color: $color-green;
+  }
+}

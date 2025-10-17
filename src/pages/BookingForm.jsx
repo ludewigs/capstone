@@ -4,7 +4,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { Box, VStack, Input, Button, Text } from '@chakra-ui/react';
 
-const schema = yup.object({
+export const bookingSchema = yup.object({
   date: yup.string().required('Please choose a date'),
   time: yup.string().required('Please choose a time'),
   guests: yup
@@ -39,7 +39,7 @@ function BookingForm({ defaultValues, availableTimes, dispatch, onSubmit }) {
     watch,
     resetField
   } = useForm({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(bookingSchema),
     defaultValues
   });
 
@@ -63,6 +63,10 @@ function BookingForm({ defaultValues, availableTimes, dispatch, onSubmit }) {
     const dd = String(d.getDate()).padStart(2, '0');
     return `${yyyy}-${mm}-${dd}`;
   }
+
+  const timeVal = watch('time');
+  const guestsVal = watch('guests');
+  const occasionVal = watch('occasion');
 
   const handleFormSubmit = (data) => {
     onSubmit(data);
@@ -125,6 +129,7 @@ function BookingForm({ defaultValues, availableTimes, dispatch, onSubmit }) {
             aria-describedby={errors.time ? 'time-error' : undefined}
             aria-required="true"
             disabled={isTimeDisabled}
+            data-empty={timeVal === '' ? 'true' : 'false'}
             {...register('time')}
           >
             <option value="">
@@ -164,9 +169,10 @@ function BookingForm({ defaultValues, availableTimes, dispatch, onSubmit }) {
             aria-invalid={!!errors.guests}
             aria-describedby={errors.guests ? 'guests-error' : undefined}
             aria-required="true"
+            data-empty={guestsVal === 0 ? 'true' : 'false'}
             {...register('guests', { valueAsNumber: true })}
           >
-            <option value="">Select number of guests</option>
+            <option value="0">Select number of guests</option>
             {GUESTS.map((g) => (
               <option key={g} value={g}>
                 {g}
@@ -200,6 +206,7 @@ function BookingForm({ defaultValues, availableTimes, dispatch, onSubmit }) {
             aria-invalid={!!errors.occasion}
             aria-describedby={errors.occasion ? 'occasion-error' : undefined}
             aria-required="true"
+            data-empty={occasionVal === '' ? 'true' : 'false'}
             {...register('occasion')}
           >
             <option value="">Select occasion</option>
