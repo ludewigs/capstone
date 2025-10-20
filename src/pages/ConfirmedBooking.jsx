@@ -1,4 +1,5 @@
-import { useEffect, useRef } from 'react';
+// src/pages/ConfirmedBooking.jsx
+import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
   Box,
@@ -6,13 +7,18 @@ import {
   Text,
   Button,
   Table,
-  VisuallyHidden
+  VisuallyHidden,
+  Dialog,
+  Portal,
+  CloseButton
 } from '@chakra-ui/react';
 
 function ConfirmedBooking() {
   const { state } = useLocation();
   const navigate = useNavigate();
   const titleRef = useRef(null);
+  const [open, setOpen] = useState(false);
+  const [showMsg, setShowMsg] = useState(false);
 
   useEffect(() => {
     titleRef.current?.focus();
@@ -65,6 +71,18 @@ function ConfirmedBooking() {
     { label: 'Email', value: email }
   ];
 
+  const handleConfirmCancel = () => {
+    try {
+      localStorage.setItem('bookings', '[]');
+    } catch {}
+    setShowMsg(true);
+    setTimeout(() => {
+      setShowMsg(false);
+      setOpen(false);
+      navigate('/reserve', { replace: true, state: { canceled: true } });
+    }, 2000);
+  };
+
   return (
     <Box
       as="main"
@@ -113,7 +131,6 @@ function ConfirmedBooking() {
         maxW="480px"
         borderRadius="md"
       >
-        {/* Screen-reader only caption */}
         <Table.Caption>
           <VisuallyHidden>Reservation details summary</VisuallyHidden>
         </Table.Caption>
@@ -130,24 +147,94 @@ function ConfirmedBooking() {
         </Table.Body>
       </Table.Root>
 
-      <Text>
-        If you need to make any changes or cancel your reservation, simply reply
-        to your confirmation email or contact us directly.
-      </Text>
+      <Box mt={6} display="flex" gap="3" flexWrap="wrap" aria-label="Actions">
+        <Button
+          colorPalette="yellow"
+          borderRadius="md"
+          fontWeight="bold"
+          onClick={() => navigate('/')}
+        >
+          Back to Home
+        </Button>
 
-      <Text>
-        We look forward to welcoming you and making your visit a memorable one!
-        🍋
-      </Text>
+        <Button
+          variant="subtle"
+          colorPalette="red"
+          borderRadius="md"
+          fontWeight={'bold'}
+          onClick={() => setOpen(true)}
+        >
+          Cancel reservation
+        </Button>
+      </Box>
 
-      <Button
-        colorPalette="yellow"
-        borderRadius="md"
-        fontWeight="bold"
-        onClick={() => navigate('/')}
+      <Dialog.Root
+        role="alertdialog"
+        open={open}
+        onOpenChange={(e) => setOpen(e.open)}
       >
-        Back to Home
-      </Button>
+        <Portal>
+          <Dialog.Backdrop />
+          <Dialog.Positioner>
+            <Dialog.Content>
+              <Dialog.Header>
+                <Dialog.Title>Cancel this reservation?</Dialog.Title>
+              </Dialog.Header>
+
+              <Box px="6" pb="4">
+                <Text fontSize="lg" mb={2}>
+                  Name: <strong>{`${firstName} ${lastName}`}</strong>
+                </Text>
+                <Text fontSize="lg" mb={2}>
+                  Email: <strong>{email}</strong>
+                </Text>
+                <Text fontSize="lg" mb={2}>
+                  Date: <strong>{date}</strong> at <strong>{time}</strong>
+                </Text>
+                <Text fontSize="lg" mb={2}>
+                  Guests: <strong>{guests}</strong>
+                </Text>
+              </Box>
+
+              <Dialog.Footer>
+                <Dialog.ActionTrigger asChild>
+                  <Button
+                    variant="outline"
+                    borderRadius={'md'}
+                    fontWeight={'bold'}
+                  >
+                    Keep reservation
+                  </Button>
+                </Dialog.ActionTrigger>
+                <Button
+                  colorPalette="red"
+                  borderRadius={'md'}
+                  fontWeight={'bold'}
+                  onClick={handleConfirmCancel}
+                >
+                  Cancel reservation
+                </Button>
+              </Dialog.Footer>
+              {showMsg && (
+                <Box
+                  textAlign="center"
+                  py="2"
+                  mb="2"
+                  color="green.600"
+                  fontWeight="semibold"
+                  aria-live="polite"
+                >
+                  Reservation canceled successfully!
+                </Box>
+              )}
+
+              <Dialog.CloseTrigger asChild>
+                <CloseButton position="absolute" top="2" insetEnd="2" />
+              </Dialog.CloseTrigger>
+            </Dialog.Content>
+          </Dialog.Positioner>
+        </Portal>
+      </Dialog.Root>
     </Box>
   );
 }

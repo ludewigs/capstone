@@ -39,6 +39,23 @@ export function initializeTimes() {
   return fetchData(new Date());
 }
 
+// --- helpers for safe localStorage JSON ---
+function safeGetJSON(key) {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+function safeSetJSON(key, value) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch {
+    // ignore quota/serialization errors
+  }
+}
+
 function Booking() {
   const navigate = useNavigate();
 
@@ -48,14 +65,41 @@ function Booking() {
     initializeTimes
   );
 
+  // Prefill user-identifying fields from localStorage (but keep booking fields empty)
+  const storedUser = safeGetJSON('littleLemonUser') || {};
+
+  const defaultValues = {
+    date: '',
+    time: '',
+    guests: 0,
+    occasion: '',
+    firstName: storedUser.firstName || '',
+    lastName: storedUser.lastName || '',
+    email: storedUser.email || ''
+  };
+
+  // inside Booking component…
+
   const handleSubmit = useCallback(
     async (data) => {
       try {
+        await new Promise((r) => setTimeout(r, 1500));
+
         const ok =
           typeof submitAPI === 'function' ? await submitAPI(data) : false;
+
         if (ok) {
-          const existing = JSON.parse(localStorage.getItem('bookings')) || [];
-          localStorage.setItem('bookings', JSON.stringify([...existing, data]));
+          // keep only the latest booking
+          safeSetJSON('bookings', [data]);
+
+          // persist user info for prefill
+          const userData = {
+            firstName: data.firstName,
+            lastName: data.lastName,
+            email: data.email
+          };
+          safeSetJSON('littleLemonUser', userData);
+
           navigate('/confirmation', { state: data });
           return;
         } else {
@@ -68,16 +112,6 @@ function Booking() {
     },
     [navigate]
   );
-
-  const defaultValues = {
-    date: '',
-    time: '',
-    guests: 0,
-    occasion: '',
-    firstName: '',
-    lastName: '',
-    email: ''
-  };
 
   // For the live region message (announces slot count to screen readers)
   const slotsMessage = useMemo(() => {
