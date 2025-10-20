@@ -141,7 +141,6 @@ function Booking() {
           availableTimes={availableTimes}
           dispatch={dispatch}
           onSubmit={handleSubmit}
-          submitAriaLabel="On Click"
         />
       </Box>
     </Box>

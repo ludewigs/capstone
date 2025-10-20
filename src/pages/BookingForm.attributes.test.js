@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react';
+import { render, screen, within, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import BookingForm from './BookingForm';
 import { ChakraProvider, defaultSystem } from '@chakra-ui/react';
@@ -206,9 +206,9 @@ describe('BookingForm attribute tests', () => {
       />
     );
 
-    await userEvent.click(
-      screen.getByRole('button', { name: /reserve a table/i })
-    );
+    const submitBtn = screen.getByRole('button', { name: /reserve a table/i });
+    const form = submitBtn.closest('form');
+    fireEvent.submit(form);
 
     const email = screen.getByLabelText(/email/i);
 

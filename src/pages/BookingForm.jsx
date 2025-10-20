@@ -37,13 +37,7 @@ export const bookingSchema = yup.object({
 const GUESTS = Array.from({ length: 10 }, (_, i) => i + 1);
 const OCCASIONS = ['Birthday', 'Engagement', 'Anniversary', 'Other'];
 
-function BookingForm({
-  defaultValues,
-  availableTimes,
-  dispatch,
-  onSubmit,
-  submitAriaLabel
-}) {
+function BookingForm({ defaultValues, availableTimes, dispatch, onSubmit }) {
   const {
     register,
     handleSubmit,
@@ -385,7 +379,7 @@ function BookingForm({
           {/* Submit */}
           <Button
             type="submit"
-            aria-label={submitAriaLabel || 'Reserve a table'}
+            aria-label={'Reserve a table'}
             variant="solid"
             bg="yellow.400"
             _hover={{ bg: 'yellow.500' }}

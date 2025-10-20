@@ -20,7 +20,7 @@ function Footer() {
       className="container"
       bg="gray"
       mt={12}
-      pb={12}
+      pb={10}
       role="contentinfo"
     >
       <Box className="app-footer container--small" mt={12}>
@@ -48,7 +48,7 @@ function Footer() {
               Doormat Navigation
             </Heading>
             <Box as="nav" aria-labelledby="footer-nav-heading">
-              <VStack as="ul" align="start" m={0} p={0}>
+              <VStack as="ul" align="start" m={0} p={0} gap={0}>
                 <Box as="li" listStyleType="none">
                   <Link as={RouterLink} to="/">
                     Home
@@ -116,6 +116,7 @@ function Footer() {
               align="start"
               m={0}
               p={0}
+              gap={0}
               aria-labelledby="footer-social-heading"
             >
               <Box as="li" listStyleType="none">

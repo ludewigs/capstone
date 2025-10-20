@@ -1,10 +1,10 @@
+// src/pages/BookingForm.submit.test.js
 const originalError = console.error;
 beforeAll(() => {
   jest.spyOn(console, 'error').mockImplementation((...args) => {
     const [first] = args;
-    if (typeof first === 'string' && first.includes('not wrapped in act')) {
+    if (typeof first === 'string' && first.includes('not wrapped in act'))
       return;
-    }
     originalError(...args);
   });
 });
@@ -17,12 +17,38 @@ import {
   screen,
   waitFor,
   fireEvent,
-  act
+  act,
+  within
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import BookingForm from './BookingForm';
 
+// ---- date helpers (keep dates inside the +14 days window) ----
+const addDays = (d, days) => {
+  const x = new Date(d);
+  x.setDate(x.getDate() + days);
+  return x;
+};
+const toYMD = (d) => {
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`;
+};
+
+// submit helper for jsdom
 const flushPromises = () => new Promise((res) => setTimeout(res, 0));
+
+// After choosing a date, BookingForm disables & repopulates the time <select>.
+// Wait until it’s enabled and has options, then select the desired time.
+const pickTimeSafely = async (value) => {
+  const timeSel = screen.getByLabelText(/^time$/i);
+  await waitFor(() => {
+    expect(timeSel).not.toBeDisabled();
+    expect(within(timeSel).getAllByRole('option').length).toBeGreaterThan(1);
+  });
+  await userEvent.selectOptions(timeSel, value);
+};
 
 test('BookingForm validates input and submits when valid', async () => {
   const onSubmit = jest.fn();
@@ -42,18 +68,16 @@ test('BookingForm validates input and submits when valid', async () => {
     onSubmit
   };
 
-  // Recommended with modern user-event
-  const user = userEvent;
-
   // Some libs scroll to error/inputs
   window.HTMLElement.prototype.scrollIntoView = jest.fn();
 
   render(<BookingForm {...props} />);
 
   const submitBtn = screen.getByRole('button', { name: /reserve a table/i });
+  const form = submitBtn.closest('form');
 
-  // 1) Submit empty form (wrap a flush after the click)
-  await user.click(submitBtn);
+  // 1) Submit empty form (button is disabled; submit the FORM directly)
+  fireEvent.submit(form);
   await act(async () => {
     await flushPromises();
   });
@@ -63,37 +87,37 @@ test('BookingForm validates input and submits when valid', async () => {
   expect(onSubmit).not.toHaveBeenCalled();
 
   // 2) Fill valid data
-  await user.type(screen.getByLabelText(/first name/i), 'Ada');
-  await user.type(screen.getByLabelText(/last name/i), 'Lovelace');
-  await user.type(screen.getByLabelText(/email/i), 'ada@example.com');
+  await userEvent.type(screen.getByLabelText(/first name/i), 'Ada');
+  await userEvent.type(screen.getByLabelText(/last name/i), 'Lovelace');
+  await userEvent.type(screen.getByLabelText(/email/i), 'ada@example.com');
 
-  const isoDate = '2025-10-30';
+  // pick a date within +14 days from "now"
+  const today = new Date();
+  const isoDate = toYMD(addDays(today, 10));
+
   const dateInput = screen.getByLabelText(/^date$/i);
-
-  // Try native typing first
+  // Try native typing first; fallback to change for jsdom
   try {
-    await user.clear(dateInput);
-    await user.type(dateInput, isoDate);
+    await userEvent.clear(dateInput);
+    await userEvent.type(dateInput, isoDate);
   } catch {
-    // Fallback for <input type="date"> in jsdom — wrap in act
     await act(async () => {
       fireEvent.change(dateInput, { target: { value: isoDate } });
       await flushPromises();
     });
   }
 
-  // Let any effects from date change settle (enabling time, dispatch, etc.)
-  await act(async () => {
-    await flushPromises();
-  });
+  // Wait for Time to be enabled & populated, then select it
+  await pickTimeSafely('17:00');
 
-  // Now continue
-  await user.selectOptions(screen.getByLabelText(/^time$/i), '17:00');
-  await user.selectOptions(screen.getByLabelText(/^guests$/i), '2');
-  await user.selectOptions(screen.getByLabelText(/occasion/i), 'Birthday');
+  await userEvent.selectOptions(screen.getByLabelText(/^guests$/i), '2');
+  await userEvent.selectOptions(screen.getByLabelText(/occasion/i), 'Birthday');
 
-  // 3) Final submit + flush
-  await user.click(submitBtn);
+  // Optional: ensure the submit button reflects a valid form
+  await waitFor(() => expect(submitBtn).not.toBeDisabled());
+
+  // 3) Final submit on the FORM + flush
+  fireEvent.submit(form);
   await act(async () => {
     await flushPromises();
   });
