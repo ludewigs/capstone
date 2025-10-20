@@ -1,5 +1,5 @@
-import { useReducer, useCallback } from 'react';
-import { Box, Heading } from '@chakra-ui/react';
+import { useReducer, useCallback, useMemo } from 'react';
+import { Box, Heading, VisuallyHidden } from '@chakra-ui/react';
 import BookingForm from './BookingForm';
 import { useNavigate } from 'react-router-dom';
 
@@ -9,7 +9,6 @@ function fetchData(date) {
   if (typeof fetchAPI === 'function') {
     return fetchAPI(d);
   }
-
   // Fallback if the script didn’t load
   return [
     '17:00',
@@ -37,7 +36,6 @@ export function updateTimes(state, action) {
 }
 
 export function initializeTimes() {
-  // “Today's” available times, per the project step
   return fetchData(new Date());
 }
 
@@ -81,18 +79,37 @@ function Booking() {
     email: ''
   };
 
+  // For the live region message (announces slot count to screen readers)
+  const slotsMessage = useMemo(() => {
+    const count = Array.isArray(availableTimes) ? availableTimes.length : 0;
+    return `${count} time slot${count === 1 ? '' : 's'} currently available.`;
+  }, [availableTimes]);
+
   return (
-    <Box className="container--small">
-      <Heading as="h1" mb={4} textAlign="center">
+    <Box
+      as="main"
+      id="main-content"
+      tabIndex={-1}
+      className="container--small"
+      aria-labelledby="reserve-title"
+    >
+      <Heading id="reserve-title" as="h1" mb={4} textAlign="center">
         Reserve a Table
       </Heading>
 
-      <BookingForm
-        defaultValues={defaultValues}
-        availableTimes={availableTimes}
-        dispatch={dispatch}
-        onSubmit={handleSubmit}
-      />
+      <VisuallyHidden aria-live="polite" aria-atomic="true">
+        {slotsMessage}
+      </VisuallyHidden>
+
+      <Box as="section" aria-labelledby="reserve-title">
+        <BookingForm
+          defaultValues={defaultValues}
+          availableTimes={availableTimes}
+          dispatch={dispatch}
+          onSubmit={handleSubmit}
+          submitAriaLabel="On Click"
+        />
+      </Box>
     </Box>
   );
 }

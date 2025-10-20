@@ -1,8 +1,15 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { Box, VStack, Input, Button, Text } from '@chakra-ui/react';
+import {
+  Box,
+  VStack,
+  Input,
+  Button,
+  Text,
+  VisuallyHidden
+} from '@chakra-ui/react';
 
 export const bookingSchema = yup.object({
   date: yup.string().required('Please choose a date'),
@@ -30,7 +37,13 @@ export const bookingSchema = yup.object({
 const GUESTS = Array.from({ length: 10 }, (_, i) => i + 1);
 const OCCASIONS = ['Birthday', 'Engagement', 'Anniversary', 'Other'];
 
-function BookingForm({ defaultValues, availableTimes, dispatch, onSubmit }) {
+function BookingForm({
+  defaultValues,
+  availableTimes,
+  dispatch,
+  onSubmit,
+  submitAriaLabel
+}) {
   const {
     register,
     handleSubmit,
@@ -73,6 +86,14 @@ function BookingForm({ defaultValues, availableTimes, dispatch, onSubmit }) {
     reset(defaultValues);
   };
 
+  const firstErrorMsg = useMemo(() => {
+    const keys = Object.keys(errors);
+    if (keys.length === 0) return '';
+    const key = keys[0];
+    const msg = errors[key]?.message;
+    return typeof msg === 'string' ? msg : '';
+  }, [errors]);
+
   return (
     <Box
       as="form"
@@ -81,250 +102,275 @@ function BookingForm({ defaultValues, availableTimes, dispatch, onSubmit }) {
       noValidate
       maxW="600px"
       mx="auto"
+      aria-describedby={firstErrorMsg ? 'form-error-summary' : undefined}
     >
-      <VStack align="stretch" spacing="4">
-        {/* Date */}
-        <Box>
-          <label htmlFor="date" className="label">
-            <Text as="span" mb="1" fontWeight="500">
-              Date
-            </Text>
-          </label>
-          <Input
-            id="date"
-            type="date"
-            min={toLocalYMD(today)}
-            max={toLocalYMD(maxDate)}
-            aria-invalid={!!errors.date}
-            aria-describedby={errors.date ? 'date-error' : undefined}
-            aria-required="true"
-            className={`form-control ${errors.date ? 'error' : ''}`}
-            {...register('date')}
-          />
-          {typeof errors.date?.message === 'string' && (
-            <Text
-              id="date-error"
-              role="alert"
-              aria-live="polite"
-              color="red.500"
-              fontSize="sm"
-              mt="-2"
-            >
-              {errors.date.message}
-            </Text>
-          )}
-        </Box>
+      <VisuallyHidden
+        id="form-error-summary"
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        {firstErrorMsg}
+      </VisuallyHidden>
 
-        {/* Time */}
-        <Box>
-          <label htmlFor="time" className="label">
-            <Text as="span" mb="1" fontWeight="500">
-              Time
-            </Text>
-          </label>
-          <select
-            id="time"
-            className={`form-select ${errors.time ? 'error' : ''}`}
-            aria-invalid={!!errors.time}
-            aria-describedby={errors.time ? 'time-error' : undefined}
-            aria-required="true"
-            disabled={isTimeDisabled}
-            data-empty={timeVal === '' ? 'true' : 'false'}
-            {...register('time')}
-          >
-            <option value="">
-              {isTimeDisabled ? 'Select a date first' : 'Select time'}
-            </option>
-            {!isTimeDisabled &&
-              availableTimes.map((t) => (
-                <option key={t} value={t}>
-                  {t}
+      <VStack align="stretch" spacing="4">
+        <Box as="fieldset">
+          {/* Date */}
+          <Box>
+            <label htmlFor="date" className="label">
+              <Text as="span" mb="1" fontWeight="500">
+                Date
+              </Text>
+            </label>
+            <Input
+              id="date"
+              type="date"
+              min={toLocalYMD(today)}
+              max={toLocalYMD(maxDate)}
+              aria-invalid={!!errors.date}
+              aria-describedby={errors.date ? 'date-error' : undefined}
+              aria-required="true"
+              required
+              className={`form-control ${errors.date ? 'error' : ''}`}
+              {...register('date')}
+            />
+            {typeof errors.date?.message === 'string' && (
+              <Text
+                id="date-error"
+                role="alert"
+                aria-live="polite"
+                color="red.500"
+                fontSize="sm"
+                mt="-2"
+              >
+                {errors.date.message}
+              </Text>
+            )}
+          </Box>
+
+          {/* Time */}
+          <Box>
+            <label htmlFor="time" className="label">
+              <Text as="span" mb="1" fontWeight="500">
+                Time
+              </Text>
+            </label>
+            <select
+              id="time"
+              className={`form-select ${errors.time ? 'error' : ''}`}
+              aria-invalid={!!errors.time}
+              aria-describedby={errors.time ? 'time-error' : undefined}
+              aria-required="true"
+              required
+              disabled={isTimeDisabled}
+              data-empty={timeVal === '' ? 'true' : 'false'}
+              {...register('time')}
+            >
+              <option value="">
+                {isTimeDisabled ? 'Select a date first' : 'Select time'}
+              </option>
+              {!isTimeDisabled &&
+                availableTimes.map((t) => (
+                  <option key={t} value={t}>
+                    {t}
+                  </option>
+                ))}
+            </select>
+            {typeof errors.time?.message === 'string' && (
+              <Text
+                id="time-error"
+                role="alert"
+                aria-live="polite"
+                color="red.500"
+                fontSize="sm"
+                mt="-2"
+              >
+                {errors.time.message}
+              </Text>
+            )}
+          </Box>
+
+          {/* Guests */}
+          <Box>
+            <label htmlFor="guests" className="label">
+              <Text as="span" mb="1" fontWeight="500">
+                Guests
+              </Text>
+            </label>
+            <select
+              id="guests"
+              className={`form-select ${errors.guests ? 'error' : ''}`}
+              aria-invalid={!!errors.guests}
+              aria-describedby={errors.guests ? 'guests-error' : undefined}
+              aria-required="true"
+              required
+              data-empty={guestsVal === 0 ? 'true' : 'false'}
+              {...register('guests', { valueAsNumber: true })}
+            >
+              <option value="0">Select number of guests</option>
+              {GUESTS.map((g) => (
+                <option key={g} value={g}>
+                  {g}
                 </option>
               ))}
-          </select>
-          {typeof errors.time?.message === 'string' && (
-            <Text
-              id="time-error"
-              role="alert"
-              aria-live="polite"
-              color="red.500"
-              fontSize="sm"
-              mt="-2"
+            </select>
+
+            {typeof errors.guests?.message === 'string' && (
+              <Text
+                id="guests-error"
+                role="alert"
+                aria-live="polite"
+                color="red.500"
+                fontSize="sm"
+                mt="-2"
+              >
+                {errors.guests.message}
+              </Text>
+            )}
+          </Box>
+
+          {/* Occasion */}
+          <Box>
+            <label htmlFor="occasion" className="label">
+              <Text as="span" mb="1" fontWeight="500">
+                Occasion
+              </Text>
+            </label>
+            <select
+              id="occasion"
+              className={`form-select ${errors.occasion ? 'error' : ''}`}
+              aria-invalid={!!errors.occasion}
+              aria-describedby={errors.occasion ? 'occasion-error' : undefined}
+              aria-required="true"
+              required
+              data-empty={occasionVal === '' ? 'true' : 'false'}
+              {...register('occasion')}
             >
-              {errors.time.message}
-            </Text>
-          )}
+              <option value="">Select occasion</option>
+              {OCCASIONS.map((o) => (
+                <option key={o} value={o}>
+                  {o}
+                </option>
+              ))}
+            </select>
+            {typeof errors.occasion?.message === 'string' && (
+              <Text
+                id="occasion-error"
+                role="alert"
+                aria-live="polite"
+                color="red.500"
+                fontSize="sm"
+                mt="-2"
+              >
+                {errors.occasion.message}
+              </Text>
+            )}
+          </Box>
         </Box>
 
-        {/* Guests */}
-        <Box>
-          <label htmlFor="guests" className="label">
-            <Text as="span" mb="1" fontWeight="500">
-              Guests
-            </Text>
-          </label>
-          <select
-            id="guests"
-            className={`form-select ${errors.guests ? 'error' : ''}`}
-            aria-invalid={!!errors.guests}
-            aria-describedby={errors.guests ? 'guests-error' : undefined}
-            aria-required="true"
-            data-empty={guestsVal === 0 ? 'true' : 'false'}
-            {...register('guests', { valueAsNumber: true })}
-          >
-            <option value="0">Select number of guests</option>
-            {GUESTS.map((g) => (
-              <option key={g} value={g}>
-                {g}
-              </option>
-            ))}
-          </select>
-          {typeof errors.guests?.message === 'string' && (
-            <Text
-              id="guests-error"
-              role="alert"
-              aria-live="polite"
-              color="red.500"
-              fontSize="sm"
-              mt="-2"
-            >
-              {errors.guests.message}
-            </Text>
-          )}
-        </Box>
+        {/* Contact info */}
+        <Box as="fieldset">
+          {/* First name */}
+          <Box>
+            <label htmlFor="firstName" className="label">
+              <Text as="span" mb="1" fontWeight="500">
+                First name
+              </Text>
+            </label>
+            <Input
+              id="firstName"
+              autoComplete="given-name"
+              aria-invalid={!!errors.firstName}
+              aria-describedby={
+                errors.firstName ? 'firstName-error' : undefined
+              }
+              aria-required="true"
+              required
+              className={`form-control ${errors.firstName ? 'error' : ''}`}
+              {...register('firstName')}
+            />
+            {typeof errors.firstName?.message === 'string' && (
+              <Text
+                id="firstName-error"
+                role="alert"
+                aria-live="polite"
+                color="red.500"
+                fontSize="sm"
+                mt="-2"
+              >
+                {errors.firstName.message}
+              </Text>
+            )}
+          </Box>
 
-        {/* Occasion */}
-        <Box>
-          <label htmlFor="occasion" className="label">
-            <Text as="span" mb="1" fontWeight="500">
-              Occasion
-            </Text>
-          </label>
-          <select
-            id="occasion"
-            className={`form-select ${errors.occasion ? 'error' : ''}`}
-            aria-invalid={!!errors.occasion}
-            aria-describedby={errors.occasion ? 'occasion-error' : undefined}
-            aria-required="true"
-            data-empty={occasionVal === '' ? 'true' : 'false'}
-            {...register('occasion')}
-          >
-            <option value="">Select occasion</option>
-            {OCCASIONS.map((o) => (
-              <option key={o} value={o}>
-                {o}
-              </option>
-            ))}
-          </select>
-          {typeof errors.occasion?.message === 'string' && (
-            <Text
-              id="occasion-error"
-              role="alert"
-              aria-live="polite"
-              color="red.500"
-              fontSize="sm"
-              mt="-2"
-            >
-              {errors.occasion.message}
-            </Text>
-          )}
-        </Box>
+          {/* Last name */}
+          <Box>
+            <label htmlFor="lastName" className="label">
+              <Text as="span" mb="1" fontWeight="500">
+                Last name
+              </Text>
+            </label>
+            <Input
+              id="lastName"
+              autoComplete="family-name"
+              aria-invalid={!!errors.lastName}
+              aria-describedby={errors.lastName ? 'lastName-error' : undefined}
+              aria-required="true"
+              required
+              className={`form-control ${errors.lastName ? 'error' : ''}`}
+              {...register('lastName')}
+            />
+            {typeof errors.lastName?.message === 'string' && (
+              <Text
+                id="lastName-error"
+                role="alert"
+                aria-live="polite"
+                color="red.500"
+                fontSize="sm"
+                mt="-2"
+              >
+                {errors.lastName.message}
+              </Text>
+            )}
+          </Box>
 
-        {/* First name */}
-        <Box>
-          <label htmlFor="firstName" className="label">
-            <Text as="span" mb="1" fontWeight="500">
-              First name
-            </Text>
-          </label>
-          <Input
-            id="firstName"
-            autoComplete="given-name"
-            aria-invalid={!!errors.firstName}
-            aria-describedby={errors.firstName ? 'firstName-error' : undefined}
-            aria-required="true"
-            className={`form-control ${errors.firstName ? 'error' : ''}`}
-            {...register('firstName')}
-          />
-          {typeof errors.firstName?.message === 'string' && (
-            <Text
-              id="firstName-error"
-              role="alert"
-              aria-live="polite"
-              color="red.500"
-              fontSize="sm"
-              mt="-2"
-            >
-              {errors.firstName.message}
-            </Text>
-          )}
-        </Box>
-
-        {/* Last name */}
-        <Box>
-          <label htmlFor="lastName" className="label">
-            <Text as="span" mb="1" fontWeight="500">
-              Last name
-            </Text>
-          </label>
-          <Input
-            id="lastName"
-            autoComplete="family-name"
-            aria-invalid={!!errors.lastName}
-            aria-describedby={errors.lastName ? 'lastName-error' : undefined}
-            aria-required="true"
-            className={`form-control ${errors.lastName ? 'error' : ''}`}
-            {...register('lastName')}
-          />
-          {typeof errors.lastName?.message === 'string' && (
-            <Text
-              id="lastName-error"
-              role="alert"
-              aria-live="polite"
-              color="red.500"
-              fontSize="sm"
-              mt="-2"
-            >
-              {errors.lastName.message}
-            </Text>
-          )}
-        </Box>
-
-        {/* Email */}
-        <Box>
-          <label htmlFor="email" className="label">
-            <Text as="span" mb="1" fontWeight="500">
-              Email
-            </Text>
-          </label>
-          <Input
-            id="email"
-            type="email"
-            placeholder="example@domain.com"
-            autoComplete="email"
-            aria-invalid={!!errors.email}
-            aria-describedby={errors.email ? 'email-error' : undefined}
-            aria-required="true"
-            className={`form-control ${errors.email ? 'error' : ''}`}
-            {...register('email')}
-          />
-          {typeof errors.email?.message === 'string' && (
-            <Text
-              id="email-error"
-              role="alert"
-              aria-live="polite"
-              color="red.500"
-              fontSize="sm"
-              mt="-2"
-            >
-              {errors.email.message}
-            </Text>
-          )}
+          {/* Email */}
+          <Box>
+            <label htmlFor="email" className="label">
+              <Text as="span" mb="1" fontWeight="500">
+                Email
+              </Text>
+            </label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="example@domain.com"
+              autoComplete="email"
+              aria-invalid={!!errors.email}
+              aria-describedby={errors.email ? 'email-error' : undefined}
+              aria-required="true"
+              required
+              className={`form-control ${errors.email ? 'error' : ''}`}
+              {...register('email')}
+            />
+            {typeof errors.email?.message === 'string' && (
+              <Text
+                id="email-error"
+                role="alert"
+                aria-live="polite"
+                color="red.500"
+                fontSize="sm"
+                mt="-2"
+              >
+                {errors.email.message}
+              </Text>
+            )}
+          </Box>
         </Box>
 
         {/* Submit */}
         <Button
           type="submit"
+          aria-label={submitAriaLabel || 'Reserve a table'}
           variant="solid"
           colorPalette="yellow"
           color="#333"

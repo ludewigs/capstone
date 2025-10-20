@@ -47,13 +47,15 @@ const MOCK_TESTIMONIALS = [
 
 function Stars({ value }) {
   return (
-    <HStack spacing="1">
+    <HStack spacing="1" role="img" aria-label={`${value} out of 5 stars`}>
       {Array.from({ length: 5 }).map((_, i) => (
         <Icon
           as={FaStar}
           key={i}
           boxSize="1.1em"
           color={i < value ? 'yellow.400' : 'gray.300'}
+          aria-hidden="true"
+          focusable="false"
         />
       ))}
     </HStack>
@@ -71,11 +73,17 @@ function getInitials(name) {
 
 export default function Testimonials() {
   return (
-    <Box as="section" bg="gray.100" py={{ base: 12, md: 16 }}>
+    <Box
+      as="section"
+      bg="gray.100"
+      py={{ base: 12, md: 16 }}
+      aria-labelledby="testimonials-title"
+    >
       <Box maxW="1100px" mx="auto" px={{ base: 4, md: 6 }}>
         <Heading
           as="h2"
-          fontSize={'64px'}
+          id="testimonials-title"
+          fontSize="64px"
           textAlign="center"
           mb={{ base: 8, md: 10 }}
         >
@@ -83,35 +91,50 @@ export default function Testimonials() {
         </Heading>
 
         <SimpleGrid
+          as="ul"
+          role="list"
           columns={{ base: 1, sm: 2, md: 4 }}
           gap={{ base: 6, md: 8 }}
         >
           {MOCK_TESTIMONIALS.map((t) => (
             <Card.Root
+              as="li"
+              role="listitem"
               key={t.id}
               bg="white"
               borderRadius="xl"
               shadow="md"
               p={5}
+              asChild
             >
-              <VStack align="start" spacing={3}>
-                <Stars value={t.rating} />
+              {/* asChild lets us set figure semantics cleanly if your Chakra version supports it.
+                 If not, replace with <Box as="figure" ...> */}
+              <Box as="figure">
+                <VStack align="start" spacing={3}>
+                  <Stars value={t.rating} />
 
-                <HStack align="center" spacing={4} w="full" mt={2}>
-                  <Avatar.Root size="md">
-                    {t.avatar ? (
-                      <Avatar.Image src={t.avatar} alt={t.name} />
-                    ) : (
-                      <Avatar.Fallback>{getInitials(t.name)}</Avatar.Fallback>
-                    )}
-                  </Avatar.Root>
-                  <Text fontWeight="semibold">{t.name}</Text>
-                </HStack>
+                  <HStack align="center" spacing={4} w="full" mt={2}>
+                    <Avatar.Root size="md">
+                      {t.avatar ? (
+                        <Avatar.Image
+                          src={t.avatar}
+                          alt=""
+                          aria-hidden="true"
+                        />
+                      ) : (
+                        <Avatar.Fallback>{getInitials(t.name)}</Avatar.Fallback>
+                      )}
+                    </Avatar.Root>
+                    <Text as="figcaption" fontWeight="semibold">
+                      {t.name}
+                    </Text>
+                  </HStack>
 
-                <Text color="fg.muted" fontSize="sm">
-                  {t.text}
-                </Text>
-              </VStack>
+                  <Text as="blockquote" color="fg.muted" fontSize="sm">
+                    {t.text}
+                  </Text>
+                </VStack>
+              </Box>
             </Card.Root>
           ))}
         </SimpleGrid>

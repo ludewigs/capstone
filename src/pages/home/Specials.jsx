@@ -6,8 +6,7 @@ import {
   Card,
   Image,
   HStack,
-  Button,
-  Flex
+  Button
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import BikeIcon from 'assets/bike.svg';
@@ -41,43 +40,52 @@ export const MOCK_SPECIALS = [
 
 function Specials() {
   const navigate = useNavigate();
-
   const specials = MOCK_SPECIALS;
+  const fmt = new Intl.NumberFormat(undefined, {
+    style: 'currency',
+    currency: 'USD'
+  });
 
   return (
     <Box className="container--small">
-      <Flex justifyContent="space-between" alignItems="center" mb={6}>
-        <Heading as="h2" fontSize={'64px'}>
-          This week's specials!
-        </Heading>
-        <Box>
+      <Box as="section" aria-labelledby="specials-title" py={2}>
+        <HStack justify="space-between" align="center" mb={6}>
+          <Heading id="specials-title" as="h2" fontSize="64px">
+            This week’s specials!
+          </Heading>
           <Button
-            colorPalette={'yellow'}
-            color={'black'}
-            fontWeight={'bold'}
-            padding={6}
-            borderRadius={'md'}
+            type="button"
+            colorPalette="yellow"
+            color="black"
+            fontWeight="bold"
+            px={6}
+            borderRadius="md"
             onClick={() => navigate('/menu')}
           >
             Online Menu
           </Button>
-        </Box>
-      </Flex>
+        </HStack>
 
-      <Box as="section" py={8}>
-        <SimpleGrid columns={{ base: 1, md: 3 }} gap={{ base: 6, md: 8 }}>
+        <SimpleGrid
+          as="ul"
+          role="list"
+          columns={{ base: 1, md: 3 }}
+          gap={{ base: 6, md: 8 }}
+        >
           {specials.map((item) => (
             <Card.Root
+              as="li"
+              role="listitem"
               key={item.id}
               overflow="hidden"
               borderBottomRadius={0}
-              border={'none'}
+              border="none"
               boxShadow="md"
               bg="gray"
             >
               <Image
                 src={item.image}
-                alt={item.name}
+                alt={`${item.name} — menu photo`}
                 h="180px"
                 w="100%"
                 objectFit="cover"
@@ -94,8 +102,9 @@ function Specials() {
                     fontWeight="bold"
                     fontSize="lg"
                     color="yellow.500"
+                    aria-label={`Price ${fmt.format(item.price)}`}
                   >
-                    ${item.price.toFixed(2)}
+                    {fmt.format(item.price)}
                   </Text>
                 </HStack>
                 <Text color="fg.muted">{item.description}</Text>
@@ -103,12 +112,19 @@ function Specials() {
 
               <Card.Footer pt={0}>
                 <Box
+                  as="button"
                   fontWeight={'bold'}
                   onClick={() => navigate('/order')}
+                  aria-label={`Order ${item.name} for delivery`}
                   cursor={'pointer'}
                 >
                   Order for delivery{' '}
-                  <Image display={'inline-block'} src={BikeIcon} />
+                  <Image
+                    src={BikeIcon}
+                    alt=""
+                    aria-hidden="true"
+                    display="inline-block"
+                  />
                 </Box>
               </Card.Footer>
             </Card.Root>

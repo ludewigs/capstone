@@ -1,6 +1,13 @@
 import { useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Box, Heading, Text, Button, Table } from '@chakra-ui/react';
+import {
+  Box,
+  Heading,
+  Text,
+  Button,
+  Table,
+  VisuallyHidden
+} from '@chakra-ui/react';
 
 function ConfirmedBooking() {
   const { state } = useLocation();
@@ -15,6 +22,7 @@ function ConfirmedBooking() {
     return (
       <Box
         as="main"
+        id="main-content"
         className="container--small"
         textAlign="center"
         aria-labelledby="confirm-title"
@@ -60,6 +68,7 @@ function ConfirmedBooking() {
   return (
     <Box
       as="main"
+      id="main-content"
       className="container--small"
       aria-labelledby="confirm-title"
       aria-describedby="confirm-intro"
@@ -104,10 +113,17 @@ function ConfirmedBooking() {
         maxW="480px"
         borderRadius="md"
       >
+        {/* Screen-reader only caption */}
+        <Table.Caption>
+          <VisuallyHidden>Reservation details summary</VisuallyHidden>
+        </Table.Caption>
+
         <Table.Body>
           {bookingData.map((row) => (
             <Table.Row key={row.label}>
-              <Table.Cell fontWeight="bold">{row.label}</Table.Cell>
+              <Table.Cell as="th" scope="row" fontWeight="bold">
+                {row.label}
+              </Table.Cell>
               <Table.Cell>{row.value}</Table.Cell>
             </Table.Row>
           ))}
