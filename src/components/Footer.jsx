@@ -44,9 +44,9 @@ function Footer() {
 
           {/* Doormat Navigation */}
           <GridItem>
-            <Heading as="h3" id="footer-nav-heading" size="sm" mb={3}>
-              Doormat Navigation
-            </Heading>
+            <Text fontWeight={'bold'} id="footer-nav-heading" mb={3}>
+              Quick Links
+            </Text>
             <Box as="nav" aria-labelledby="footer-nav-heading">
               <VStack as="ul" align="start" m={0} p={0} gap={0}>
                 <Box as="li" listStyleType="none">
@@ -85,9 +85,9 @@ function Footer() {
 
           {/* Contact */}
           <GridItem>
-            <Heading as="h3" id="footer-contact-heading" size="sm" mb={3}>
+            <Text fontWeight={'bold'} id="footer-contact-heading" mb={3}>
               Contact
-            </Heading>
+            </Text>
             <Box as="address" aria-labelledby="footer-contact-heading">
               <Box>
                 <Text mb={0}>123 Main Street, Chicago</Text>
@@ -108,9 +108,9 @@ function Footer() {
 
           {/* Social Media */}
           <GridItem>
-            <Heading as="h3" id="footer-social-heading" size="sm" mb={3}>
+            <Text fontWeight={'bold'} id="footer-social-heading" mb={3}>
               Social Media
-            </Heading>
+            </Text>
             <VStack
               as="ul"
               align="start"
