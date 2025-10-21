@@ -75,8 +75,9 @@ export default function Testimonials() {
   return (
     <Box
       as="section"
-      bg="gray.100"
-      py={{ base: 12, md: 16 }}
+      bg="#d9d9d9"
+      py={12}
+      my={10}
       aria-labelledby="testimonials-title"
     >
       <Box maxW="1100px" mx="auto" px={{ base: 4, md: 6 }}>
@@ -102,6 +103,7 @@ export default function Testimonials() {
               role="listitem"
               key={t.id}
               bg="white"
+              border={'none'}
               borderRadius="xl"
               shadow="md"
               p={5}
