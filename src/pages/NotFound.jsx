@@ -17,7 +17,7 @@ function NotFound() {
       </Heading>
 
       <Text mb={4}>
-        Looks like this page doesn’t exist — or maybe it rolled away somewhere
+        Looks like this page doesn't exist — or maybe it rolled away somewhere
         behind the kitchen counter.
       </Text>
 

@@ -1,4 +1,3 @@
-// src/pages/Booking.test.js
 import { initializeTimes, updateTimes } from './Booking';
 
 describe('initializeTimes and updateTimes', () => {

@@ -23,7 +23,7 @@ function AboutUs() {
 
       <Text mb={4}>
         At Little Lemon, every dish tells a story — blending the time-honored
-        recipes they grew up with and the vibrant energy of Chicago’s dining
+        recipes they grew up with and the vibrant energy of Chicago's dining
         scene. We take pride in using{' '}
         <strong>fresh, locally sourced ingredients</strong>, complemented by
         imported herbs, olive oils, and cheeses that reflect the spirit of the
@@ -31,7 +31,7 @@ function AboutUs() {
       </Text>
 
       <Text mb={4}>
-        Whether it’s a cozy dinner for two, a weekend celebration, or a casual
+        Whether it's a cozy dinner for two, a weekend celebration, or a casual
         lunch break, our goal is to make every guest feel like part of our
         extended family.
       </Text>

@@ -28,7 +28,7 @@ function About() {
             Chicago
           </Heading>
           <Text color="fg.muted" fontSize="md" maxW="56ch">
-            We’re a family-style Mediterranean restaurant serving simple, honest
+            We're a family-style Mediterranean restaurant serving simple, honest
             food made from fresh, locally sourced ingredients. Our menu blends
             time-honored recipes with a modern, Chicago twist.
           </Text>

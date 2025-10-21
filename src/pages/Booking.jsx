@@ -9,7 +9,7 @@ function fetchData(date) {
   if (typeof fetchAPI === 'function') {
     return fetchAPI(d);
   }
-  // Fallback if the script didn’t load
+  // Fallback if the script didn't load
   return [
     '17:00',
     '17:30',

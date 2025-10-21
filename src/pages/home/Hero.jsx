@@ -26,9 +26,8 @@ function Hero() {
               traditional recipes served with a modern twist.
             </Text>
             <Button
-              type="button"
+              className="btn-lemon"
               colorPalette="yellow"
-              color="black"
               fontWeight="bold"
               borderRadius="md"
               onClick={() => navigate('/reserve')}

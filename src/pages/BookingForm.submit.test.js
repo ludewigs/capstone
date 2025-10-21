@@ -1,4 +1,3 @@
-// src/pages/BookingForm.submit.test.js
 const originalError = console.error;
 beforeAll(() => {
   jest.spyOn(console, 'error').mockImplementation((...args) => {
@@ -40,7 +39,7 @@ const toYMD = (d) => {
 const flushPromises = () => new Promise((res) => setTimeout(res, 0));
 
 // After choosing a date, BookingForm disables & repopulates the time <select>.
-// Wait until it’s enabled and has options, then select the desired time.
+// Wait until it's enabled and has options, then select the desired time.
 const pickTimeSafely = async (value) => {
   const timeSel = screen.getByLabelText(/^time$/i);
   await waitFor(() => {
@@ -113,7 +112,7 @@ test('BookingForm validates input and submits when valid', async () => {
   await userEvent.selectOptions(screen.getByLabelText(/^guests$/i), '2');
   await userEvent.selectOptions(screen.getByLabelText(/occasion/i), 'Birthday');
 
-  // Optional: ensure the submit button reflects a valid form
+  // Ensure the submit button reflects a valid form
   await waitFor(() => expect(submitBtn).not.toBeDisabled());
 
   // 3) Final submit on the FORM + flush

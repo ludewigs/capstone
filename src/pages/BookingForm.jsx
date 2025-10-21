@@ -380,10 +380,8 @@ function BookingForm({ defaultValues, availableTimes, dispatch, onSubmit }) {
           <Button
             type="submit"
             aria-label={'Reserve a table'}
-            variant="solid"
-            bg="yellow.400"
-            _hover={{ bg: 'yellow.500' }}
-            color="#333"
+            className="btn-lemon"
+            colorPalette="yellow"
             borderRadius="md"
             fontWeight="bold"
             size="lg"

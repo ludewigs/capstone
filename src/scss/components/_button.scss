@@ -1,0 +1,12 @@
+.btn-lemon {
+  color: #333 !important;
+
+  &:hover {
+    background: #e0b700 !important;
+  }
+
+  &:active,
+  &:hover:active {
+    background: #c69700 !important;
+  }
+}

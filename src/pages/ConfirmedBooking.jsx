@@ -1,4 +1,3 @@
-// src/pages/ConfirmedBooking.jsx
 import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
@@ -49,6 +48,7 @@ function ConfirmedBooking() {
         </Text>
 
         <Button
+          className="btn-lemon"
           colorPalette="yellow"
           borderRadius="md"
           fontWeight="bold"
@@ -149,6 +149,7 @@ function ConfirmedBooking() {
 
       <Box mt={6} display="flex" gap="3" flexWrap="wrap" aria-label="Actions">
         <Button
+          className="btn-lemon"
           colorPalette="yellow"
           borderRadius="md"
           fontWeight="bold"

@@ -51,12 +51,11 @@ function Specials() {
       <Box as="section" aria-labelledby="specials-title" py={2}>
         <HStack justify="space-between" align="center" mb={6}>
           <Heading id="specials-title" as="h2" fontSize="64px">
-            This week’s specials!
+            This week's specials!
           </Heading>
           <Button
-            type="button"
+            className="btn-lemon"
             colorPalette="yellow"
-            color="black"
             fontWeight="bold"
             px={6}
             borderRadius="md"
