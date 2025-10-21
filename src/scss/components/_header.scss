@@ -28,6 +28,10 @@
       color: $color-green;
       font-weight: 600;
 
+      &.active {
+        text-decoration: underline;
+      }
+
       &:hover {
         text-decoration: underline;
       }
